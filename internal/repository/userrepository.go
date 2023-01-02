@@ -92,7 +92,7 @@ func (m *UserRepositoryImpl) GetOneByID(context context.Context, id int) (res *d
 }
 
 func (m *UserRepositoryImpl) GetOneByUsername(ctx context.Context, username string) (res *domain.User, err error) {
-	stmt, err := m.DB.PrepareContext(ctx, "SELECT id, name, username, password FROM users WHERE username=$1")
+	stmt, err := m.DB.PrepareContext(ctx, "SELECT id, name, email, username, password FROM users WHERE username=$1")
 	if err != nil {
 		return nil, err
 	}
@@ -103,6 +103,7 @@ func (m *UserRepositoryImpl) GetOneByUsername(ctx context.Context, username stri
 	err = row.Scan(
 		&user.ID,
 		&user.Name,
+		&user.Email,
 		&user.Username,
 		&user.Password,
 	)

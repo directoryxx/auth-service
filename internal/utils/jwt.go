@@ -32,7 +32,7 @@ func GenerateToken(user *domain.User, uuid string) (token interface{}, err error
 	tokenJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate encoded token and send it as response.
-	t, err := tokenJwt.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	t, err := tokenJwt.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
 		return nil, err
 	}
