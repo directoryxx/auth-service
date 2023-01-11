@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -138,30 +137,16 @@ func (uc *UserControllerImpl) Login(c echo.Context) error {
 func (uc *UserControllerImpl) Profile(c echo.Context) error {
 	// Convert echo context
 	con := c.Request().Context()
-	ctx, cancel := context.WithTimeout(con, 10000*time.Second)
+	_, cancel := context.WithTimeout(con, 10000*time.Second)
 	defer cancel()
 
 	// Get JWT Content
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.JwtCustomClaims)
-	uuid := claims.Uuid
-
-	// Get saved data from uuid
-	profile, err := uc.UserUsecase.Profile(ctx, uuid)
-
-	if err != nil {
-		response := &errorresponse{
-			Error:   true,
-			Message: err.Error(),
-		}
-
-		return c.JSON(http.StatusUnauthorized, response)
-	}
+	user := c.Get("user").(domain.User)
 
 	response := &profileresponse{
 		Error:   false,
 		Message: "Berhasil mengambil data",
-		Profile: profile,
+		Profile: &user,
 	}
 
 	return c.JSON(http.StatusOK, response)

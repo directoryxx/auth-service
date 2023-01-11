@@ -21,3 +21,9 @@ type (
 		Password string `json:"password" validate:"required"`
 	}
 )
+
+type UserResponseAuthService struct {
+	Error   bool   `json:"error"`
+	Message string `json:"message"`
+	Profile User   `json:"profile"`
+}

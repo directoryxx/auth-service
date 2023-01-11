@@ -81,12 +81,6 @@ func RunApi() {
 	log.Println("[INFO] Loading Routes")
 	api.Routes(app, userController)
 
-	log.Println("[INFO] Loading JWT Middleware")
-	SetPrivateMiddleware(app)
-
-	log.Println("[INFO] Loading Protected Endpoint")
-	api.PrivateRoutes(app, userController)
-
 	log.Fatal(app.Start(fmt.Sprintf(":%s", os.Getenv("APPLICATION_PORT"))))
 }
 
