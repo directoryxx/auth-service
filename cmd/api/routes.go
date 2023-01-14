@@ -31,6 +31,7 @@ func Routes(
 
 	router.Use(authMiddleware)
 	router.GET("/profile", UserController.Profile)
+	router.POST("/logout", UserController.Logout)
 
 }
 
@@ -101,6 +102,7 @@ func authMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 			json.Unmarshal([]byte(resUuid), &user)
 			// set to context
 			c.Set("user", user)
+			c.Set("uuid", uuid)
 			return next(c)
 		} else {
 			response := errorresponse{

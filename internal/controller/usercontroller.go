@@ -42,6 +42,7 @@ type UserController interface {
 	Login(ec echo.Context) error
 	Register(ec echo.Context) error
 	Profile(ec echo.Context) error
+	Logout(ec echo.Context) error
 }
 
 // implement interface
@@ -147,6 +148,25 @@ func (uc *UserControllerImpl) Profile(c echo.Context) error {
 		Error:   false,
 		Message: "Berhasil mengambil data",
 		Profile: &user,
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func (uc *UserControllerImpl) Logout(c echo.Context) error {
+	// Convert echo context
+	con := c.Request().Context()
+	_, cancel := context.WithTimeout(con, 10000*time.Second)
+	defer cancel()
+
+	// Get JWT Content
+	uuid := c.Get("uuid").(string)
+
+	uc.UserUsecase.Logout(con, uuid)
+
+	response := &profileresponse{
+		Error:   false,
+		Message: "Berhasil logout",
 	}
 
 	return c.JSON(http.StatusOK, response)

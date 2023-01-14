@@ -18,6 +18,7 @@ type UserUseCase interface {
 	Register(ctx context.Context, register *domain.RegisterValidation) (user *domain.User, uuid string, err error)
 	Profile(ctx context.Context, uuid string) (user *domain.User, err error)
 	CheckUsername(ctx context.Context, username string) (user *domain.User, err error)
+	Logout(ctx context.Context, uuid string)
 }
 
 type UserUseCaseImpl struct {
@@ -131,4 +132,8 @@ func (uc *UserUseCaseImpl) CheckUsername(ctx context.Context, username string) (
 	}
 
 	return user, nil
+}
+
+func (uc *UserUseCaseImpl) Logout(ctx context.Context, uuid string) {
+	uc.UserRepo.DeleteUUID(ctx, uuid)
 }

@@ -25,6 +25,7 @@ type UserRepository interface {
 	RememberUUID(ctx context.Context, user *domain.User, uuid string) error
 	GetUUID(ctx context.Context, uuid string) (string, error)
 	Publish(ctx context.Context, data string, topic string) error
+	DeleteUUID(ctx context.Context, uuid string)
 }
 
 type UserRepositoryImpl struct {
@@ -191,6 +192,10 @@ func (m *UserRepositoryImpl) RememberUUID(ctx context.Context, user *domain.User
 func (m *UserRepositoryImpl) GetUUID(ctx context.Context, uuid string) (res string, err error) {
 	res, err = m.Redis.Get(ctx, uuid).Result()
 	return res, err
+}
+
+func (m *UserRepositoryImpl) DeleteUUID(ctx context.Context, uuid string) {
+	m.Redis.Del(ctx, uuid)
 }
 
 func (m *UserRepositoryImpl) Publish(ctx context.Context, data string, topic string) error {
