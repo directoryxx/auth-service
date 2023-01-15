@@ -27,3 +27,12 @@ type UserResponseAuthService struct {
 	Message string `json:"message"`
 	Profile User   `json:"profile"`
 }
+
+type PublishAuth struct {
+	Data   any
+	Action string
+}
+
+type LogoutAction struct {
+	Uuid string
+}

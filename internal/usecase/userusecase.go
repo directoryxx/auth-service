@@ -136,4 +136,17 @@ func (uc *UserUseCaseImpl) CheckUsername(ctx context.Context, username string) (
 
 func (uc *UserUseCaseImpl) Logout(ctx context.Context, uuid string) {
 	uc.UserRepo.DeleteUUID(ctx, uuid)
+
+	authAction := &domain.LogoutAction{
+		Uuid: uuid,
+	}
+
+	publishAuth := &domain.PublishAuth{
+		Data:   authAction,
+		Action: "logout",
+	}
+
+	b, _ := json.Marshal(publishAuth)
+
+	uc.UserRepo.Publish(ctx, string(b), "auth")
 }
