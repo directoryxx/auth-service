@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type User struct {
 	ID       int    `json:"id"`
 	Email    string `json:"email"`
@@ -28,11 +30,22 @@ type UserResponseAuthService struct {
 	Profile User   `json:"profile"`
 }
 
-type PublishAuth struct {
-	Data   any
+type PublishAuthLogout struct {
+	Data   LogoutAction
 	Action string
 }
 
 type LogoutAction struct {
 	Uuid string
+}
+
+type PublishAuthLogin struct {
+	Data   LoginAction
+	Action string
+}
+
+type LoginAction struct {
+	Uuid string
+	User User
+	Exp  time.Duration
 }

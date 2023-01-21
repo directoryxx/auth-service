@@ -185,7 +185,21 @@ func (m *UserRepositoryImpl) RememberUUID(ctx context.Context, user *domain.User
 	userModel, _ := json.Marshal(user)
 	jwtHourExpire := os.Getenv("JWT_EXPIRE_HOUR")
 	convJwtHour, _ := strconv.Atoi(jwtHourExpire)
-	err := m.Redis.Set(ctx, uuid, userModel, time.Hour*time.Duration(convJwtHour)).Err()
+	time := time.Hour * time.Duration(convJwtHour)
+	m.Redis.Set(ctx, uuid, userModel, time).Err()
+	publishLogin := &domain.PublishAuthLogin{
+		Action: "login",
+		Data: domain.LoginAction{
+			Uuid: uuid,
+			User: *user,
+			Exp:  time,
+		},
+	}
+	out, err := json.Marshal(publishLogin)
+	if err != nil {
+		panic(err)
+	}
+	m.Publish(ctx, string(out), "auth-login")
 	return err
 }
 
