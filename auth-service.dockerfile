@@ -20,10 +20,14 @@ FROM alpine:latest
 
 RUN mkdir /app
 
+RUN mkdir /migration
+
 COPY --from=builder /app/build/authApp /app
 
 COPY --from=builder /go/bin/migrate /bin/migrate
 
-COPY ./.env /.env
+COPY ./db/ /migration
+
+# COPY ./.env /.env
 
 CMD [ "/app/authApp" ]
